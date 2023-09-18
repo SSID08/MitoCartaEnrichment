@@ -34,4 +34,3 @@ The main function which performs the enrichment is the run_enrichment() function
 ```enrichment_plot=barplot_enrichment(enrichment_result,n=10) # Plot barplot for the top 10 enriched terms```
 
 ```plot(enrichment_plot)```
-
