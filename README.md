@@ -1,5 +1,5 @@
 # MitoCartaEnrichment
-Generally available enrichment analysis packages such as GO and Reactome, while extensive, lack specific mitochondria-function related terms. The MitoCarta, on the other hand, has more specific (and precise) annotations due to the curators' exclusive and extensive focus on the mitochondria. Therefore, this package was created to help perform enrichment analysis based on MitoCarta 3.0 pathways and visualise the results. Currently, only a simple barplot visualisation is supported, however, more functions may be added in the future depending on user feedback.
+Generally available enrichment analysis packages such as GO and Reactome, while extensive, are limited in specificty and depth with respect to mitochondria function-related terms. The MitoCarta, on the other hand, has more specific (and precise) annotations compared to the others due to the curators' exclusive and extensive focus on the mitochondria. Therefore, this package was created to help perform enrichment analysis based on MitoCarta 3.0 pathways and visualise the results. Currently, only a simple barplot visualisation is supported, however, more functions may be added in the future depending on user feedback.
 
 ### Downloading the package
 
