@@ -4,12 +4,14 @@
 \alias{barplot_enrichment}
 \title{Plot enrichment results}
 \usage{
-barplot_enrichment(enrichment_results, n = 10)
+barplot_enrichment(enrichment_results, n = NULL, text_size)
 }
 \arguments{
 \item{enrichment_results}{The dataframe of the enrichment analysis results from run_enrichment}
 
 \item{n}{The number of top 'n' terms to include in the plot}
+
+\item{text_size}{The size of axis tick labels on both the X and Y axis}
 }
 \description{
 Plot results of enrichment analysis. By default, the ten most significant terms are plotted

@@ -19,7 +19,8 @@ mito_enrichment_function=function(x,y,z){
   no_DE_not_in_pathway=length(setdiff(k,x))
   contingency_matrix=matrix(c(DE_in_pathway,no_DE_in_pathway,DE_not_in_pathway,no_DE_not_in_pathway),nrow = 2,byrow = T)
   test=stats::fisher.test(contingency_matrix,alternative = 'greater')
-  ret_val=list(c(intersect(x,y)),(test$estimate),(test$p.value))
+  gene_ratio=DE_in_pathway/length(x)
+  ret_val=list(c(intersect(x,y)),gene_ratio,test$estimate,test$p.value)
   #names(ret_val)=c('Genes of interest in Pathway','Odds Ratio','P-value')
   return(ret_val)
 }
@@ -40,11 +41,12 @@ run_enrichment=function(x,y){
   test_results=lapply(X = pathways$ENTREZ,FUN = mito_enrichment_function,y=x,z=y)
   test_results=data.frame(do.call(rbind, test_results))
   test_results$Pathway=pathways$MitoPathway
-  test_results=test_results%>%dplyr::filter(X2!=0)
-  colnames(test_results)=c('ENTREZ IDs','Odds-ratio','P-values','Pathway')
-  test_results=test_results%>%dplyr::select(Pathway,`ENTREZ IDs`,`Odds-ratio`,`P-values`)
+  test_results=test_results%>%dplyr::filter(X3!=0)
+  colnames(test_results)=c('ENTREZ IDs','Gene-ratio','Odds-ratio','P-values','Pathway')
+  test_results=test_results%>%dplyr::select(Pathway,`ENTREZ IDs`,`Odds-ratio`,`P-values`,`Gene-ratio`)
   test_results$`Odds-ratio`=as.numeric(test_results$`Odds-ratio`)
   test_results$`P-values`=as.numeric(test_results$`P-values`)
+  test_results$`Gene-ratio`=as.numeric(test_results$`Gene-ratio`)
   test_results$adj.P=stats::p.adjust(test_results$`P-values`,method = 'BH')
   test_results_final=test_results%>%dplyr::filter(adj.P<0.05)
   test_results_final$Gene_Names=apply(test_results_final,FUN = function(x){
@@ -57,6 +59,7 @@ run_enrichment=function(x,y){
   test_results_final$`ENTREZ IDs`=sapply(test_results_final$`ENTREZ IDs`,FUN = paste,collapse=',')
   #test_results_final=test_results_final%>%select(-Gene_namees_split)
   test_results_final=test_results_final%>%dplyr::mutate(Gene_count = stringr::str_count(Gene_Names, pattern = ',') + 1)
+  test_results_final=test_results_final%>%dplyr::mutate_at(c("Odds-ratio","Gene-ratio","P-values"),~round(.x,3))
   return(test_results_final)
 }
 
@@ -93,16 +96,25 @@ valid_input=function(){
 #' @import ggplot2
 #' @param enrichment_results The dataframe of the enrichment analysis results from run_enrichment
 #' @param n The number of top 'n' terms to include in the plot
+#' @param text_size The size of axis tick labels on both the X and Y axis
+#'
 #' @description Plot results of enrichment analysis. By default, the ten most significant terms are plotted
 #' @export
-barplot_enrichment=function(enrichment_results,n=10){
+barplot_enrichment=function(enrichment_results,n=NULL,text_size){
   enrichment_results=enrichment_results%>%dplyr::arrange(adj.P)
-  if (n>dim(enrichment_results)[1]){
+  if (is.null(n)){
     n=dim(enrichment_results)[1]
   }
-  plot=ggplot(data=enrichment_results[c(1:n),])+geom_bar(mapping = aes(x=reorder(Pathway,Gene_count),y=Gene_count,fill=adj.P),stat = 'identity')+
+  else if(n>dim(enrichment_results)[1]){
+    n=dim(enrichment_results)[1]
+  }
+  else{
+    n=n
+  }
+
+  plot=ggplot(data=enrichment_results[c(1:n),])+geom_bar(mapping = aes(x=reorder(Pathway,`Gene-ratio`),y=`Gene-ratio`,fill=adj.P),stat = 'identity')+
     scale_fill_gradient(low='blue',high='red',name='Adjusted P value')+
-    xlab('Pathway')+ylab('Count')+coord_flip()+theme_minimal()+
-    theme(legend.title = element_text(size=10),legend.text = element_text(size=8),axis.title = element_text(size=12),axis.text = element_text(size=10))
+    xlab('Pathway')+ylab('Gene Ratio')+coord_flip()+theme_minimal()+
+    theme(legend.title = element_text(size=10),legend.text = element_text(size=8),axis.title = element_text(size=text_size+2),axis.text = element_text(size=text_size))
   return((plot))
 }
