@@ -5,12 +5,15 @@
 \title{Run enrichment across the different pathways based on the the input gene set of interest and
 background set}
 \usage{
-run_enrichment(x, y)
+run_enrichment(x, y, q_threshold = 0.05)
 }
 \arguments{
 \item{x}{List of ENTREZ Ids of interest}
 
 \item{y}{List of ENTREZ Ids of background set}
+
+\item{q_threshold}{FDR threshold for retaining enrichment terms. Default is 0.05.
+To retain results across all pathway terms, use 1.}
 }
 \value{
 Dataframe of significant enrichment results at FDR< 0.05

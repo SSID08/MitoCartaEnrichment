@@ -4,7 +4,7 @@
 \alias{barplot_enrichment}
 \title{Plot enrichment results}
 \usage{
-barplot_enrichment(enrichment_results, n = NULL, text_size)
+barplot_enrichment(enrichment_results, n = NULL, text_size = 10)
 }
 \arguments{
 \item{enrichment_results}{The dataframe of the enrichment analysis results from run_enrichment}

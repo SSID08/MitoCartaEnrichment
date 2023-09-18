@@ -35,9 +35,11 @@ mito_enrichment_function=function(x,y,z){
 #' @import tidyverse
 #' @param x List of ENTREZ Ids of interest
 #' @param y List of ENTREZ Ids of background set
+#' @param q_threshold FDR threshold for retaining enrichment terms. Default is 0.05.
+#' To retain results across all pathway terms, use 1.
 #' @return Dataframe of significant enrichment results at FDR< 0.05
 #' @export
-run_enrichment=function(x,y){
+run_enrichment=function(x,y,q_threshold=0.05){
   test_results=lapply(X = pathways$ENTREZ,FUN = mito_enrichment_function,y=x,z=y)
   test_results=data.frame(do.call(rbind, test_results))
   test_results$Pathway=pathways$MitoPathway
@@ -48,7 +50,7 @@ run_enrichment=function(x,y){
   test_results$`P-values`=as.numeric(test_results$`P-values`)
   test_results$`Gene-ratio`=as.numeric(test_results$`Gene-ratio`)
   test_results$adj.P=stats::p.adjust(test_results$`P-values`,method = 'BH')
-  test_results_final=test_results%>%dplyr::filter(adj.P<0.05)
+  test_results_final=test_results%>%dplyr::filter(adj.P<q_threshold)
   test_results_final$Gene_Names=apply(test_results_final,FUN = function(x){
     Gene_Symbols=AnnotationDbi::mapIds(org.Hs.eg.db::org.Hs.eg.db,keys=x["ENTREZ IDs"][[1]],keytype ="ENTREZID",column="SYMBOL")
     names(Gene_Symbols)=NULL
@@ -100,7 +102,7 @@ valid_input=function(){
 #'
 #' @description Plot results of enrichment analysis. By default, the ten most significant terms are plotted
 #' @export
-barplot_enrichment=function(enrichment_results,n=NULL,text_size){
+barplot_enrichment=function(enrichment_results,n=NULL,text_size=10){
   enrichment_results=enrichment_results%>%dplyr::arrange(adj.P)
   if (is.null(n)){
     n=dim(enrichment_results)[1]
