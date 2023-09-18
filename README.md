@@ -2,7 +2,9 @@
 Generally available enrichment analysis packages such as GO and Reactome, while extensive, lack specific mitochondria-function related terms. Therefore, this package was created to help perform enrichment analysis based on MitoCarta 3.0 pathways and visualise the results. Currently, only a simple barplot visualisation is supported, however, more functions may be added in the future.
 
 ### Downloading the package
+
 The most straightforward way to install would be to use the devtools function as follows and then load it into the environment:
+
 ```install_github("SSID08/MitoCartaEnrichment")```
 
 ```library(MitoCartaEnrichment)```
