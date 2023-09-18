@@ -1,5 +1,5 @@
 # MitoCartaEnrichment
-Generally available enrichment analysis packages such as GO and Reactome, while extensive, lack specific mitochondria-function related terms. Therefore, this package was created to help perform enrichment analysis based on MitoCarta 3.0 pathways and visualise the results. Currently, only a simple barplot visualisation is supported, however, more functions may be added in the future.
+Generally available enrichment analysis packages such as GO and Reactome, while extensive, lack specific mitochondria-function related terms. The MitoCarta, on the other hand, has more specific (and precise) annotations due to the curators' exclusive and extensive focus on the mitochondria. Therefore, this package was created to help perform enrichment analysis based on MitoCarta 3.0 pathways and visualise the results. Currently, only a simple barplot visualisation is supported, however, more functions may be added in the future depending on user feedback.
 
 ### Downloading the package
 
@@ -33,6 +33,4 @@ The main function which performs the enrichment is the run_enrichment() function
 
 ```enrichment_result=run_enrichment(x=input_ENTREZ,y=background_ENTREZ,q_threshold=0.1) # Run enrichment with custom FDR threshold of 0.1 ```
 
-```enrichment_plot=barplot_enrichment(enrichment_result,n=10) # Plot barplot for the top 10 enriched terms```
-
-```plot(enrichment_plot)```
+```barplot_enrichment(enrichment_result,n=10) # Plot barplot for the top 10 enriched terms```
