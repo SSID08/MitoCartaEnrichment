@@ -32,3 +32,6 @@ The main function which performs the enrichment is the run_enrichment() function
 ```enrichment_result=run_enrichment(x=input_ENTREZ,y=background_ENTREZ,q_threshold=0.1) # Run enrichment with custom FDR threshold of 0.1 ```
 
 ```enrichment_plot=barplot_enrichment(enrichment_result,n=10) # Plot barplot for the top 10 enriched terms```
+
+```plot(enrichment_plot)```
+
