@@ -13,14 +13,15 @@ mito_enrichment_function=function(x,y,z){
   y=stats::na.omit(y)
   z=stats::na.omit(z)
   k=(setdiff(z,y)) # not DE proteins
-  DE_in_pathway=length(intersect(x,y))
+  in_pathway_proteins=intersect(x,y)
+  DE_in_pathway=length(in_pathway_proteins)
   no_DE_in_pathway=length(intersect(k,x))
   DE_not_in_pathway=length(setdiff(y,x))
   no_DE_not_in_pathway=length(setdiff(k,x))
   contingency_matrix=matrix(c(DE_in_pathway,no_DE_in_pathway,DE_not_in_pathway,no_DE_not_in_pathway),nrow = 2,byrow = T)
   test=stats::fisher.test(contingency_matrix,alternative = 'greater')
   gene_ratio=DE_in_pathway/length(x)
-  ret_val=list(c(intersect(x,y)),gene_ratio,test$estimate,test$p.value)
+  ret_val=list(c(in_pathway_proteins),gene_ratio,test$estimate,test$p.value)
   #names(ret_val)=c('Genes of interest in Pathway','Odds Ratio','P-value')
   return(ret_val)
 }
@@ -32,7 +33,6 @@ mito_enrichment_function=function(x,y,z){
 #' @import org.Hs.eg.db
 #' @import stringr
 #' @import dplyr
-#' @import tidyverse
 #' @param x List of ENTREZ Ids of interest
 #' @param y List of ENTREZ Ids of background set
 #' @param q_threshold FDR threshold for retaining enrichment terms. Default is 0.05.
